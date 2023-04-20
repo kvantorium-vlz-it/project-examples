@@ -1,0 +1,8 @@
+{
+  "name": "project-examples",
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/*"
+  ],
+  "license": "MIT"
+}
