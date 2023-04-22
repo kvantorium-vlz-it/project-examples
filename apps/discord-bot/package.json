@@ -5,7 +5,9 @@
     "dev": "nodemon src/index.ts"
   },
   "dependencies": {
-    "discord.js": "^14.9.0",
+    "@discordjs/core": "^0.5.2",
+    "@discordjs/rest": "^1.7.0",
+    "@discordjs/ws": "^0.8.1",
     "dotenv": "^16.0.3"
   },
   "devDependencies": {
