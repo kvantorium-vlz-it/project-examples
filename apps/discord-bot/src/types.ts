@@ -1,3 +1,10 @@
-import { CommandInteraction } from 'discord.js'
-
-export type CommandCallback = (interaction: CommandInteraction) => void
+/**
+ * Типизация переменных среды
+ */
+declare global {
+    namespace NodeJS {
+        interface ProcessEnv {
+            TOKEN: string
+        }
+    }
+}
