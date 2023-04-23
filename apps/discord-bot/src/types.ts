@@ -1,6 +1,6 @@
-/**
- * Типизация переменных среды
- */
+import { WithIntrinsicProps, APIApplicationCommandInteraction } from '@discordjs/core'
+
+// Типизация переменных среды
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
@@ -8,3 +8,6 @@ declare global {
         }
     }
 }
+
+// Тип для параметра функции обработчика команды
+export type CommandHandlerArgs = WithIntrinsicProps<APIApplicationCommandInteraction>

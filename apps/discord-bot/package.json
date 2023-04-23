@@ -2,7 +2,8 @@
   "name": "discord-bot",
   "packageManager": "yarn@3.5.0",
   "scripts": {
-    "dev": "nodemon src/index.ts"
+    "dev": "nodemon src/index.ts",
+    "basic": "nodemon src/examples/basic.ts"
   },
   "dependencies": {
     "@discordjs/builders": "^1.6.1",
