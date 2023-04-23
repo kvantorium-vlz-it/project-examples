@@ -2,6 +2,20 @@ import { PrismaClient } from '@prisma/client'
 
 const prismaClient = new PrismaClient()
 
+export async function isRegistred(discordUserId: string) {
+    await prismaClient.$connect()
+
+    const user = await prismaClient.user.findFirst({
+        where: {
+            id: discordUserId,
+        }
+    })
+
+    await prismaClient.$disconnect()
+
+    return user !== undefined
+}
+
 export async function addUser(discordUserId: string) {
     await prismaClient.$connect()
 
