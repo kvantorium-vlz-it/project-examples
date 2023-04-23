@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "nodemon src/index.ts",
     "basic": "nodemon src/examples/basic.ts",
-    "register": "nodemon src/examples/register.ts"
+    "register": "nodemon src/examples/register.ts",
+    "buttons-embeds": "nodemon src/examples/buttons-embeds.ts"
   },
   "dependencies": {
     "@discordjs/builders": "^1.6.1",
