@@ -8,7 +8,7 @@ dotenv.config()
 export const COMMANDS_PATH = path.join(__dirname, 'commands')
 
 // Токен дискорд бота
-export const TOKEN = process.env.TOKEN!
+export const TOKEN = process.env.DISCORD_TOKEN!
 
 // Название роли everyone
 export const EVERYONE_ROLE_NAME = '@everyone'

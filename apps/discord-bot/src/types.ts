@@ -4,7 +4,7 @@ import { WithIntrinsicProps, APIApplicationCommandInteraction } from '@discordjs
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
-            TOKEN: string
+            DISCORD_TOKEN: string
         }
     }
 }
