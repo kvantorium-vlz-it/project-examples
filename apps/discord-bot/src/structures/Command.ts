@@ -1,5 +1,4 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
-import { WithIntrinsicProps, APIInteraction } from '@discordjs/core'
 import { CommandHandlerArgs } from '../types'
 
 /**
