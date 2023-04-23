@@ -4,6 +4,7 @@ import { CommandHandlerArgs } from '../types'
 import { addUser, getClicks } from '../database'
 import { ButtonStyle, MessageFlags } from '@discordjs/core'
 
+// ID для кнопки
 export const CLICKS_BUTTON_ID = 'clicks-button'
 
 class RegisterCommand extends Command {
@@ -16,8 +17,10 @@ class RegisterCommand extends Command {
             return
         }
 
+        // Проверка, зарегистрирован ли пользователь
         const isRegistred = (await getClicks(interation.member.user.id)) !== undefined
 
+        // Если пользователь зарегистрирован
         if (isRegistred) {
             await api.interactions.reply(interation.id, interation.token, {
                 content: 'You already registred'
@@ -26,8 +29,10 @@ class RegisterCommand extends Command {
             return
         }
 
+        // Добавление пользователя в бд
         await addUser(interation.member.user.id)
 
+        // Оповещение пользователя о регистрации
         await api.interactions.reply(interation.id, interation.token, {
             content: 'Below you can click the button to get points',
             flags: MessageFlags.Ephemeral,
