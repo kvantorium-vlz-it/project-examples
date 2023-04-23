@@ -3,10 +3,12 @@
   "packageManager": "yarn@3.5.0",
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "basic": "nodemon src/examples/basic.ts"
+    "basic": "nodemon src/examples/basic.ts",
+    "register": "nodemon src/examples/register.ts"
   },
   "dependencies": {
     "@discordjs/builders": "^1.6.1",
+    "@discordjs/collection": "^1.5.0",
     "@discordjs/core": "^0.5.2",
     "@discordjs/rest": "^1.7.0",
     "@discordjs/ws": "^0.8.1",

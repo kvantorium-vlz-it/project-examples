@@ -527,6 +527,7 @@ __metadata:
   resolution: "discord-bot@workspace:apps/discord-bot"
   dependencies:
     "@discordjs/builders": ^1.6.1
+    "@discordjs/collection": ^1.5.0
     "@discordjs/core": ^0.5.2
     "@discordjs/rest": ^1.7.0
     "@discordjs/ws": ^0.8.1
