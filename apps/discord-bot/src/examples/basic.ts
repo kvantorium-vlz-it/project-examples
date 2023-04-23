@@ -8,6 +8,7 @@ import {
 import { REST } from '@discordjs/rest'
 import { TOKEN } from '../constants'
 import { WebSocketManager } from '@discordjs/ws'
+import exampleCommand from '../commands/ExampleCommand'
 
 // Создание rest и ws объектов, в которых лежат настройки и api для связи дискорда
 const rest = new REST({ version: '10' }).setToken(TOKEN)
@@ -28,7 +29,7 @@ client.once(GatewayDispatchEvents.Ready, ({ data: client }) => {
 })
 
 // Обработчик для интеракций
-client.on(GatewayDispatchEvents.InteractionCreate, ({ api, data: interaction }) => {
+client.on(GatewayDispatchEvents.InteractionCreate, ({ api, data: interaction, ...rest }) => {
     // Выбор только команд из всех интеракций
     if (interaction.type !== InteractionType.ApplicationCommand) {
         return
@@ -46,9 +47,14 @@ client.on(GatewayDispatchEvents.InteractionCreate, ({ api, data: interaction }) 
             })
             break
         }
+        // Команда example
+        case exampleCommand.data.name: {
+            exampleCommand.handler({ api, data: interaction, ...rest })
+            break
+        }
         // Если для команды нет обработчика
         default: {
-            console.warn(`Handler for command ${interaction.data.name} not found`)
+            console.warn(`Handler for command "${interaction.data.name}" not found`)
         }
     }
 })

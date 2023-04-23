@@ -1,12 +1,20 @@
-import { CommandInteraction, SlashCommandBuilder } from 'discord.js'
+import { SlashCommandBuilder } from '@discordjs/builders'
+import { WithIntrinsicProps, APIInteraction } from '@discordjs/core'
 
-type CommandHandler = (interaction: CommandInteraction) => void
+/**
+ * Structure for easilly creating command
+ */
+abstract class Command {
+    /**
+     * Command data for pushing to discord server
+     */
+    public abstract data: SlashCommandBuilder
 
-class Command {
-    constructor(
-        public data: SlashCommandBuilder,
-        public handler: CommandHandler,
-    ) {}
+    /**
+     * Command handler
+     * @param args command interaction args
+     */
+    public abstract handler(args: WithIntrinsicProps<APIInteraction>): void
 }
 
 export default Command
