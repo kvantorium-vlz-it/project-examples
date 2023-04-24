@@ -62,6 +62,7 @@ export async function getPointsCount(userId: number) {
     return user?.points
 }
 
+// Функция добавления одного очка пользователю
 export async function addPoint(userId: number) {
     // Проверка на то, зарегистрирован ли пользователь
     if (!isRegistred(userId)) {
@@ -88,6 +89,7 @@ export async function addPoint(userId: number) {
     await prismaClient.$disconnect()
 }
 
+// Функцция начала опроса
 export async function startQuiz(userId: number) {
     await prismaClient.$connect()
 
@@ -100,16 +102,20 @@ export async function startQuiz(userId: number) {
     await prismaClient.$disconnect()
 }
 
+// Функцция закрытия опроса
 export async function closeQuiz(userId: number) {
     await prismaClient.$connect()
 
+    // Получения актуального опроса, который не закрыт у пользователя
     const quiz = await userCurrentQuiz(userId)
 
+    // Проверка, если ли такой опрос
     if (!quiz) {
         await prismaClient.$disconnect()
         return
     }
 
+    // Закрытие опроса
     await prismaClient.quiz.update({
         data: {
             isClosed: true,
@@ -122,6 +128,7 @@ export async function closeQuiz(userId: number) {
     await prismaClient.$disconnect()
 }
 
+// Функция получения актуального опроса
 export async function userCurrentQuiz(userId: number) {
     await prismaClient.$connect()
 
@@ -147,6 +154,7 @@ export async function userCurrentQuiz(userId: number) {
     return quiz
 }
 
+// Функция ответа на вопрос для актуального опроса
 export async function answerQuizStage(userId: number, stage: number, answer: string, isFinished?: boolean) {
     await prismaClient.$connect()
 
@@ -157,6 +165,7 @@ export async function answerQuizStage(userId: number, stage: number, answer: str
         return
     }
 
+    // Создание ответа
     await prismaClient.quizAnswer.create({
         data: {
             stage: stage,
@@ -165,6 +174,7 @@ export async function answerQuizStage(userId: number, stage: number, answer: str
         }
     })
 
+    // Обновление опроса
     await prismaClient.quiz.update({
         data: {
             stage: stage,
@@ -177,72 +187,3 @@ export async function answerQuizStage(userId: number, stage: number, answer: str
 
     await prismaClient.$disconnect()
 }
-
-// export async function startQuiz(userId: number) {
-//     await prismaClient.$connect()
-
-//     await prismaClient.quiz.create({
-//         data: {
-//             userId: `${userId}`,
-//         }
-//     })
-
-//     await prismaClient.$disconnect()
-// }
-
-// export async function getQuizStage(userId: number) {
-//     await prismaClient.$connect()
-
-//     const quiz = await prismaClient.quiz.findFirst({
-//         where: {
-//             userId: {
-//                 equals: `${userId}`,
-//             }
-//         }
-//     })
-
-//     await prismaClient.$disconnect()
-
-//     return quiz?.stage
-// }
-
-// export async function answerStage(userId: number, stage: number, answer: string) {
-//     await prismaClient.$connect()
-
-//     const quiz = await prismaClient.quiz.findFirst({
-//         where: {
-//             userId: {
-//                 equals: `${userId}`,
-//             }
-//         }
-//     })
-
-//     if (!quiz) {
-//         return
-//     }
-
-//     await prismaClient.quizAnswer.create({
-//         data: {
-//             stage: stage,
-//             quizId: quiz.id,
-//         }
-//     })
-
-//     await prismaClient.$disconnect()
-// }
-
-// export async function getQuizs(userId: number) {
-//     await prismaClient.$connect()
-
-//     const quizs = await prismaClient.quiz.findMany({
-//         where: {
-//             userId: {
-//                 equals: `${userId}`,
-//             }
-//         }
-//     })
-
-//     await prismaClient.$disconnect()
-
-//     return quizs
-// }

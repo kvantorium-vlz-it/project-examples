@@ -69,20 +69,24 @@ client.action(INFO_BUTTON_ID, (ctx) => {
     client.telegram.sendMessage(chatId, 'Bot\'s info')
 })
 
+// Команда открытия опроса
 client.command('quiz', async (ctx) => {
     await startQuiz(ctx.from.id)
 
     await ctx.reply('Question 1?')
 })
 
+// Команда закрытия опроса
 client.command('closeQuiz', async (ctx) => {
     await closeQuiz(ctx.from.id)
 
     ctx.reply('You close quiz!')
 })
 
+// Динамические значения кнопок
 const DYNAMIC_BUTTON_ANSWERS = ['a1', 'a2', 'a3'] as const
 
+// Обработчик при отправки любого сообщения
 client.on(message('text'), async (ctx) => {
     const userQuizStage = (await userCurrentQuiz(ctx.from.id))?.stage
 
@@ -90,16 +94,21 @@ client.on(message('text'), async (ctx) => {
         return
     }
 
+    // Ответ пользователя
     const answer = ctx.message.text
 
+    // Выбор по стадии опроса
     switch(userQuizStage) {
         case 0: {
+            // Создание ответа
             await answerQuizStage(ctx.from.id, 1, answer)
+            // Следующий вопрос
             await ctx.reply('Question 2?')
             break
         }
         case 1: {
             await answerQuizStage(ctx.from.id, 2, answer)
+            // Следующий вопрос, используя кнопки
             await ctx.reply('Question 3?', {
                 reply_markup: {
                     inline_keyboard: [
@@ -109,6 +118,7 @@ client.on(message('text'), async (ctx) => {
             })
             break
         }
+        // Финальная стадия нашего опроса
         case 3: {
             await answerQuizStage(ctx.from.id, 4, answer, true)
             await ctx.reply('Thanks for completing quiz')
@@ -117,6 +127,7 @@ client.on(message('text'), async (ctx) => {
     }
 })
 
+// Создание обработчиков для динамических кнопок
 DYNAMIC_BUTTON_ANSWERS.map((answer) => {
     client.action(answer, async (ctx) => {
         const userId = ctx.from?.id
@@ -131,6 +142,7 @@ DYNAMIC_BUTTON_ANSWERS.map((answer) => {
             return
         }
 
+        // Проверка, удовлетворяет ли ответ нашей стадии опроса
         if (userQuizStage !== 2) {
             return
         }
