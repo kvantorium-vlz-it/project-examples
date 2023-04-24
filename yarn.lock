@@ -1566,8 +1566,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "telegram-bot@workspace:apps/telegram-bot"
   dependencies:
+    "@prisma/client": ^4.13.0
     dotenv: ^16.0.3
     nodemon: ^2.0.22
+    prisma: ^4.13.0
     telegraf: ^4.12.2
     ts-node: ^10.9.1
     typescript: ^5.0.4
