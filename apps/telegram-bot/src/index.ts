@@ -1,7 +1,7 @@
 import { Telegraf, Markup } from 'telegraf'
 import { message } from 'telegraf/filters'
-import { GET_POINTS_BUTTON_ID, INFO_BUTTON_ID, TOKEN } from '../constants'
-import { addPoint, addUser, answerQuizStage, closeQuiz, getPointsCount, startQuiz, userCurrentQuiz } from '../database'
+import { GET_POINTS_BUTTON_ID, INFO_BUTTON_ID, TOKEN } from './constants'
+import { addPoint, addUser, answerQuizStage, closeQuiz, getPointsCount, startQuiz, userCurrentQuiz } from './database'
 
 // Создание бота
 const client = new Telegraf(TOKEN)
