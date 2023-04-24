@@ -15,7 +15,7 @@ export async function addUser(userId: number) {
     // Создание нового пользователя
     await prismaClient.user.create({
         data: {
-            id: userId,
+            id: `${userId}`,
         }
     })
 
@@ -32,7 +32,7 @@ export async function isRegistred(userId: number) {
         // Использоваение фильтра по id
         where: {
             id: {
-                equals: userId,
+                equals: `${userId}`,
             }
         }
     })
@@ -51,7 +51,7 @@ export async function getPointsCount(userId: number) {
     const user = await prismaClient.user.findFirst({
         where: {
             id: {
-                equals: userId
+                equals: `${userId}`
             }
         }
     })
@@ -81,7 +81,7 @@ export async function addPoint(userId: number) {
         },
         // Фильтр
         where: {
-            id: userId
+            id: `${userId}`
         }
     })
 
