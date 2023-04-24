@@ -1,5 +1,6 @@
 import { Telegraf, Markup } from 'telegraf'
 import { GET_POINTS_BUTTON_ID, INFO_BUTTON_ID, TOKEN } from '../constants'
+import { addPoint, addUser, getPointsCount } from '../database'
 
 // Создание бота
 const client = new Telegraf(TOKEN)
@@ -9,9 +10,11 @@ const client = new Telegraf(TOKEN)
 // обрабатывать команду
 // Каждый обработчик может содержать параметр контекста (Обычно называют ctx), в котором
 // хранимтся информация о том, где, от кого была вызвана команда, нажата кнопки и т.п.
-client.command('start', (ctx) => {
+client.command('start', async (ctx) => {
+    await addUser(ctx.from.id)
+
     // Ответ на вызов команды
-    ctx.reply('You have started chat with bot!')
+    await ctx.reply('You have started chat with bot!')
 })
 
 // Обработчик команды "buttons"
@@ -37,6 +40,19 @@ client.command('buttons', async (ctx) => {
             resize_keyboard: true,
         }
     })
+})
+
+client.action(GET_POINTS_BUTTON_ID, async (ctx) => {
+    const userId = ctx.from?.id
+
+    if (!userId) {
+        return
+    }
+
+
+    await addPoint(userId)
+    const pointsCount = await getPointsCount(userId)
+    await ctx.reply(`1 point added! You now have ${pointsCount} points!`)
 })
 
 // Обработка кнопки "info"
