@@ -1,7 +1,7 @@
 {
   "name": "telegram-bot",
   "scripts": {
-    "basic": "nodemon src/examples/basic.ts"
+    "dev": "nodemon src/index.ts"
   },
   "dependencies": {
     "@prisma/client": "^4.13.0",
