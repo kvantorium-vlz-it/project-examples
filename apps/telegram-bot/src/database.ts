@@ -87,3 +87,162 @@ export async function addPoint(userId: number) {
 
     await prismaClient.$disconnect()
 }
+
+export async function startQuiz(userId: number) {
+    await prismaClient.$connect()
+
+    await prismaClient.quiz.create({
+        data: {
+            userId: `${userId}`,
+        }
+    })
+
+    await prismaClient.$disconnect()
+}
+
+export async function closeQuiz(userId: number) {
+    await prismaClient.$connect()
+
+    const quiz = await userCurrentQuiz(userId)
+
+    if (!quiz) {
+        await prismaClient.$disconnect()
+        return
+    }
+
+    await prismaClient.quiz.update({
+        data: {
+            isClosed: true,
+        },
+        where: {
+            id: quiz.id,
+        }
+    })
+
+    await prismaClient.$disconnect()
+}
+
+export async function userCurrentQuiz(userId: number) {
+    await prismaClient.$connect()
+
+    const quiz = await prismaClient.quiz.findFirst({
+        where: {
+            isFinished: {
+                equals: false,
+            },
+            isClosed: {
+                equals: false,
+            },
+            userId: {
+                equals: `${userId}`
+            }
+        },
+        include: {
+            quizAnswer: true,
+        }
+    })
+
+    await prismaClient.$disconnect()
+
+    return quiz
+}
+
+export async function answerQuizStage(userId: number, stage: number, answer: string, isFinished?: boolean) {
+    await prismaClient.$connect()
+
+    const quiz = await userCurrentQuiz(userId)
+
+    if (!quiz) {
+        await prismaClient.$disconnect()
+        return
+    }
+
+    await prismaClient.quizAnswer.create({
+        data: {
+            stage: stage,
+            quizId: quiz.id,
+            answer,
+        }
+    })
+
+    await prismaClient.quiz.update({
+        data: {
+            stage: stage,
+            isFinished: isFinished,
+        },
+        where: {
+            id: quiz.id,
+        },
+    })
+
+    await prismaClient.$disconnect()
+}
+
+// export async function startQuiz(userId: number) {
+//     await prismaClient.$connect()
+
+//     await prismaClient.quiz.create({
+//         data: {
+//             userId: `${userId}`,
+//         }
+//     })
+
+//     await prismaClient.$disconnect()
+// }
+
+// export async function getQuizStage(userId: number) {
+//     await prismaClient.$connect()
+
+//     const quiz = await prismaClient.quiz.findFirst({
+//         where: {
+//             userId: {
+//                 equals: `${userId}`,
+//             }
+//         }
+//     })
+
+//     await prismaClient.$disconnect()
+
+//     return quiz?.stage
+// }
+
+// export async function answerStage(userId: number, stage: number, answer: string) {
+//     await prismaClient.$connect()
+
+//     const quiz = await prismaClient.quiz.findFirst({
+//         where: {
+//             userId: {
+//                 equals: `${userId}`,
+//             }
+//         }
+//     })
+
+//     if (!quiz) {
+//         return
+//     }
+
+//     await prismaClient.quizAnswer.create({
+//         data: {
+//             stage: stage,
+//             quizId: quiz.id,
+//         }
+//     })
+
+//     await prismaClient.$disconnect()
+// }
+
+// export async function getQuizs(userId: number) {
+//     await prismaClient.$connect()
+
+//     const quizs = await prismaClient.quiz.findMany({
+//         where: {
+//             userId: {
+//                 equals: `${userId}`,
+//             }
+//         }
+//     })
+
+//     await prismaClient.$disconnect()
+
+//     return quizs
+// }

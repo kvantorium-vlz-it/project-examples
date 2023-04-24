@@ -1,6 +1,7 @@
 import { Telegraf, Markup } from 'telegraf'
+import { message } from 'telegraf/filters'
 import { GET_POINTS_BUTTON_ID, INFO_BUTTON_ID, TOKEN } from '../constants'
-import { addPoint, addUser, getPointsCount } from '../database'
+import { addPoint, addUser, answerQuizStage, closeQuiz, getPointsCount, startQuiz, userCurrentQuiz } from '../database'
 
 // Создание бота
 const client = new Telegraf(TOKEN)
@@ -66,6 +67,77 @@ client.action(INFO_BUTTON_ID, (ctx) => {
 
     // Отправка сообщение в чат, используя API телеграма
     client.telegram.sendMessage(chatId, 'Bot\'s info')
+})
+
+client.command('quiz', async (ctx) => {
+    await startQuiz(ctx.from.id)
+
+    await ctx.reply('Question 1?')
+})
+
+client.command('closeQuiz', async (ctx) => {
+    await closeQuiz(ctx.from.id)
+
+    ctx.reply('You close quiz!')
+})
+
+const DYNAMIC_BUTTON_ANSWERS = ['a1', 'a2', 'a3'] as const
+
+client.on(message('text'), async (ctx) => {
+    const userQuizStage = (await userCurrentQuiz(ctx.from.id))?.stage
+
+    if (userQuizStage === undefined) {
+        return
+    }
+
+    const answer = ctx.message.text
+
+    switch(userQuizStage) {
+        case 0: {
+            await answerQuizStage(ctx.from.id, 1, answer)
+            await ctx.reply('Question 2?')
+            break
+        }
+        case 1: {
+            await answerQuizStage(ctx.from.id, 2, answer)
+            await ctx.reply('Question 3?', {
+                reply_markup: {
+                    inline_keyboard: [
+                        DYNAMIC_BUTTON_ANSWERS.map((a, i) => Markup.button.callback(`answer ${i}`, a))
+                    ]
+                }
+            })
+            break
+        }
+        case 3: {
+            await answerQuizStage(ctx.from.id, 4, answer, true)
+            await ctx.reply('Thanks for completing quiz')
+            break
+        }
+    }
+})
+
+DYNAMIC_BUTTON_ANSWERS.map((answer) => {
+    client.action(answer, async (ctx) => {
+        const userId = ctx.from?.id
+
+        if (!userId) {
+            return
+        }
+
+        const userQuizStage = (await userCurrentQuiz(ctx.from.id))?.stage
+
+        if (userQuizStage === undefined) {
+            return
+        }
+
+        if (userQuizStage !== 2) {
+            return
+        }
+
+        await answerQuizStage(userId, 3, answer)
+        await ctx.reply('Question 4?')
+    })
 })
 
 // Запуск бота
